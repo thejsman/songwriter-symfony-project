@@ -1,0 +1,4 @@
+token.create:
+    path: /oauth/v2/token
+    methods: POST
+    defaults: { _controller: AuthBundle:Token:create }

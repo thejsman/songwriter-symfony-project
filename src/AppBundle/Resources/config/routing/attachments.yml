@@ -1,0 +1,4 @@
+attachments.fetch:
+    path: /attachments/{path}
+    methods: GET
+    defaults: { _controller: action.attachments.fetch:executeAction }

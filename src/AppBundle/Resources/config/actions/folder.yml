@@ -1,0 +1,51 @@
+services:
+    action.folder.list:
+        parent: core.action.abstract
+        class: Requestum\ApiBundle\Action\ListAction
+        arguments:
+            - AppBundle\Entity\Folder
+        calls:
+            - ['setOptions', [{'filters': [
+                'order-by',
+                'user',
+                'name',
+                'updatedAt'
+              ]}]]
+
+    action.folder.create:
+        parent: core.action.abstract
+        class: Requestum\ApiBundle\Action\CreateAction
+        arguments:
+            - AppBundle\Entity\Folder
+            - AppBundle\Form\Folder\FolderType
+
+    action.folder.delete:
+        parent: core.action.abstract
+        class: Requestum\ApiBundle\Action\DeleteAction
+        arguments:
+            - AppBundle\Entity\Folder
+
+
+    action.folder.update:
+        parent: core.action.abstract
+        class: AppBundle\Action\UpdateAction
+        arguments:
+            - AppBundle\Entity\Folder
+            - AppBundle\Form\Folder\FolderType
+
+    action.folder.fetch:
+        parent: core.action.abstract
+        class: Requestum\ApiBundle\Action\FetchAction
+        arguments:
+            - AppBundle\Entity\Folder
+
+    action.folder.global:
+        parent: core.action.abstract
+        class: AppBundle\Action\GlobalAction
+        arguments:
+            - "@action.folder.create"
+            - "@action.folder.update"
+
+    action.folder.list.removed:
+        parent: core.action.abstract
+        class: AppBundle\Action\Folder\ListDeletedAction

@@ -1,0 +1,30 @@
+song_field.create:
+    path: /song-field
+    methods: POST
+    defaults: { _controller: action.song_field.create:executeAction }
+
+song_field.update:
+    path: /song-field/{id}
+    methods: PATCH
+    defaults: { _controller: action.song_field.update:executeAction }
+    requirements:
+        id: \d+
+
+song_field.fetch:
+    path: /song-field/{id}
+    methods: GET
+    defaults: { _controller: action.song_field.fetch:executeAction }
+    requirements:
+        id: \d+
+
+song_field.list:
+    path: /song-field
+    methods: GET
+    defaults: { _controller: action.song_field.list:executeAction }
+
+song_field.remove:
+    path: /song-field/{id}
+    methods: DELETE
+    defaults: { _controller: action.song_field.delete:executeAction }
+    requirements:
+        id: \d+

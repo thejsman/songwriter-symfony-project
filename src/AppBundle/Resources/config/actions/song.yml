@@ -1,0 +1,63 @@
+services:
+    action.song.list:
+        parent: core.action.abstract
+        class: Requestum\ApiBundle\Action\ListAction
+        arguments:
+            - AppBundle\Entity\Song
+        calls:
+            - ['setOptions', [{'filters': [
+                'order-by',
+                'folder',
+                'user',
+                'name',
+                'folder',
+                'updatedAt'
+              ]}]]
+
+    action.song.create:
+        parent: core.action.abstract
+        class: Requestum\ApiBundle\Action\CreateAction
+        arguments:
+            - AppBundle\Entity\Song
+            - AppBundle\Form\Song\SongType
+        calls:
+            - ['setOptions', [{'form_options': {"user":"@=service('security.token_storage').getToken().getUser()", "em": "@doctrine.orm.entity_manager"}}]]
+
+    action.song.delete:
+        parent: core.action.abstract
+        class: Requestum\ApiBundle\Action\DeleteAction
+        arguments:
+            - AppBundle\Entity\Song
+
+    action.song.update:
+        parent: core.action.abstract
+        class: AppBundle\Action\UpdateAction
+        arguments:
+            - AppBundle\Entity\Song
+            - AppBundle\Form\Song\SongType
+        calls:
+            - ['setOptions', [{'form_options': {"user":"@=service('security.token_storage').getToken().getUser()", "em": "@doctrine.orm.entity_manager"}}]]
+
+    action.song.fetch:
+        parent: core.action.abstract
+        class: Requestum\ApiBundle\Action\FetchAction
+        arguments:
+            - AppBundle\Entity\Song
+
+    action.song.update_order:
+        parent: core.action.abstract
+        class: Requestum\ApiBundle\Action\UpdateAction
+        arguments:
+            - AppBundle\Entity\Song
+            - AppBundle\Form\Song\SongFieldsOrderType
+
+    action.song.global:
+        parent: core.action.abstract
+        class: AppBundle\Action\GlobalAction
+        arguments:
+            - "@action.song.create"
+            - "@action.song.update"
+
+    action.song.list.removed:
+        parent: core.action.abstract
+        class: AppBundle\Action\Song\ListDeletedAction

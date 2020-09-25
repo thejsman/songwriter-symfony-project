@@ -1,0 +1,6 @@
+services:
+    voter.note.owner:
+        class: AppBundle\Security\Authorization\OwnerVoter
+        arguments: [[fetch, update], AppBundle\Entity\Note, song.folder.user]
+        tags:
+            - { name: security.voter }

@@ -1,0 +1,486 @@
+#%RAML 1.0
+
+title: test service API
+baseUri: #{{ BASE_URI }}#
+version: v1
+
+#securitySchemes:
+#    oauth_2_0: !include security/outh2.raml
+
+traits:
+    secured: !include traits/secured.raml
+    clientSecured: !include traits/client_secured.raml
+    adminSecured: !include traits/admin-secured.raml
+    paginated: !include traits/paginated.raml
+    expandable: !include traits/expandable.raml
+    sortable: !include traits/sortable.raml
+    notFoundResponse: !include traits/not-found-response.raml
+    entityResponse: !include traits/entity-response.raml
+    formAction: !include traits/form-action.raml
+
+    listAction: !include traits/actions/list.raml
+    createAction: !include traits/actions/create.raml
+    fetchAction: !include traits/actions/fetch.raml
+    updateAction: !include traits/actions/update.raml
+    deleteAction: !include traits/actions/delete.raml
+    transitAction: !include traits/actions/transit.raml
+
+types:
+    NotFoundBody:
+        type: object
+        properties:
+            message?: string
+        example: |
+            {
+                "message": "Not found"
+            }
+
+    BadResponseBody:
+        type: object
+        properties:
+            message?: string
+        example: |
+            {
+                "message": "Error message"
+            }
+
+    ValidationError:
+        properties:
+            code: string
+            description: string
+
+    UnporcessableEntityBody:
+        properties:
+            errors: ValidationError[]
+            fields:
+                type: object
+        example: |
+            {
+                "errors": [
+                    {"code": "global.code", "description": "global error description"}
+                ],
+                "fields": {
+                    "field1": {
+                        "errors": [
+                            {"code": "field2.global.code", "description": "field1 global error description"}
+                        ],
+                        "fields": []
+                    },
+                    "field2": {
+                          "errors": [
+                              {"code": "field2.global.code", "description": "field2 global error description"}
+                          ],
+                          "fields": {
+                              "field2.1": {
+                                  "errors": [
+                                      {"code": "field2.1.global.code", "description": "field2.1 global error description"}
+                                  ],
+                                  "fields": []
+                              }
+                          }
+                    }
+                }
+            }
+
+    User:
+        type: object
+        properties:
+            id: integer
+            name: string
+            email: string
+            enabled: boolean
+
+    UserInput:
+        properties:
+            name: string
+            email: string
+            plainPassword: string
+            purchaseDate:
+
+    Metronome:
+        type: MetronomeInput
+        properties:
+            id: integer
+
+    MetronomeInput:
+        type: object
+        properties:
+            tact: integer
+            firstPart: integer
+            secondPart: integer
+
+    Song:
+        type: SongInput
+        properties:
+            id: integer
+            updatedAt: string
+
+    SongInput:
+        type: object
+        properties:
+            name:
+                description: Song name
+                type: string
+                required: true
+            deviceId:
+                description: Synchronization device id
+                type: string
+                required: false
+            deviceModel:
+                description: Synchronization device model
+                type: string
+                required: false
+            orderNumber:
+                description: Song ordering field
+                type: integer
+                required: false
+            folder:
+                description: The song folder/category
+                type: integer
+                required: false
+            note:
+                description: The song notes
+                type: NoteInput
+                required: false
+            fields:
+                description: The song fields/blocks
+                type: SongFieldInput[]
+                required: true
+            ideas:
+                description: The song ideas
+                type: IdeaInput[]
+                required: false
+
+    SongField:
+        type: SongFieldInput
+        properties:
+            id: integer
+
+    SongFieldInput:
+        type: object
+        properties:
+            type: string
+            chords: array
+            metronome: MetronomeInput
+            text: string
+            audio: array
+
+    SongFieldsOrder:
+        type: object
+        properties:
+            fieldsIdOrdered:
+                description: Song field ids
+                type: integer[]
+                required: true
+
+    Note:
+        type: NoteInput
+        properties:
+            id: integer
+
+    NoteInput:
+        type: object
+        properties:
+            author: string
+            coAuthor: string
+            started: string
+            finished: string
+            publisher: string
+            key: string
+            BMP: string
+            style: string
+            notes: string
+            tempo: string
+
+    File:
+        type: FileInput
+        properties:
+            id: integer
+            context: string
+            contentType: string
+            size: integer
+            path: string
+
+    FileInput:
+        type: object
+        properties:
+            name: string
+
+    FileProgress:
+        type: object
+        properties:
+            lengthComputable: boolean
+            loaded: number
+            tootal: number
+
+    Folder:
+        type: FolderInput
+        properties:
+            id: integer
+
+    FolderInput:
+        type: object
+        properties:
+            name: string
+            user: integer
+
+    IdeaInput:
+        type: object
+        properties:
+            type: string
+            category: string
+            text: string
+
+    PurchaseDate:
+        type: object
+        properties:
+            purchaseDate[receiptData]: string
+            token: string
+
+    ResetPassword:
+        properties:
+            plainPassword: string
+
+/oauth/v2/token:
+    post:
+        body:
+            application/x-www-form-urlencoded:
+                properties:
+                    client_id:
+                        description: Client id
+                        type: string
+                        required: true
+                    client_secret:
+                        description: Client secret
+                        type: string
+                        required: true
+                    grant_type:
+                        description: |
+                          Grant type can be one of:<br>
+                          <ul>
+                            <li>"client_credentials" for annonymous token</li>
+                            <li>"urn:external:grant-type" for user token granted by external auth service</li>
+                            <li>"password" for regular user</li>
+                            <li>"refresh_token" for refreshing access token</li>
+                          </ul>
+                        type: string
+                        required: true
+                    service:
+                        description: Used with "urn:external:grant-type" grant type, to specify external auth service. This api supports "facebook" and "google".
+                        type: string
+                        required: false
+                    token:
+                        description: Used with "urn:external:grant-type" grant type, to pass external service access token.
+                        type: string
+                        required: false
+                    username:
+                        description: Used with "password" grant type, to pass username.
+                        type: string
+                        required: false
+                    password:
+                        description: Used with "password" grant type, to pass password.
+                        type: string
+                        required: false
+/api:
+    /folder:
+        post:
+            is: [secured, createAction: {inputType: FolderInput, type: Folder}]
+        get:
+            is: [secured, listAction: {type: Folder}]
+            queryParameters:
+                name:
+                    description: Folder name
+                    type: string
+                    required: false
+                    example: test
+                user:
+                    description: Folder user id
+                    type: integer
+                    required: false
+                    example: 1
+                updatedAt:
+                    description: Updated time
+                    type: string
+                    required: false
+                    example: 2018-12-28 17:55:39
+        /{id}:
+            get:
+                is: [secured, fetchAction: {type: Folder}]
+            delete:
+                is: [secured, deleteAction]
+        /removed:
+            get:
+                is: [secured, listAction: {type: array}]
+                queryParameters:
+                    deletedAt:
+                        description: Deleted time. Return all deleted folders for the last 7 days if parameter "deletedAt" not specified.
+                        type: string
+                        required: false
+                        example: ">2018-12-28 17:55:39"
+    /song:
+        post:
+            is: [secured, createAction: {inputType: SongInput, type: Song}]
+        get:
+            is: [secured, listAction: {type: Song}]
+            queryParameters:
+                name:
+                    description: song name
+                    type: string
+                    required: false
+                    example: test
+                folder:
+                    description: Folder id
+                    type: integer
+                    required: false
+                    example: 1
+                user:
+                    description: User id
+                    type: integer
+                    required: false
+                    example: 1
+                updatedAt:
+                    description: Updated time
+                    type: string
+                    required: false
+                    example: 2018-12-28 17:55:39
+        /{id}:
+            get:
+                is: [secured, fetchAction: {type: Song}]
+            patch:
+                is: [secured, updateAction: {inputType: SongInput, type: Song}]
+            delete:
+                is: [secured, deleteAction]
+            /fields/order:
+                patch:
+                    is: [secured, updateAction: {inputType: SongFieldsOrder, type: Song}]
+        /removed:
+            get:
+                is: [secured, listAction: {type: array}]
+                queryParameters:
+                    deletedAt:
+                        description: Deleted time. Return all deleted songs for the last 7 days if parameter "deletedAt" not specified.
+                        type: string
+                        required: false
+                        example: ">2018-12-28 17:55:39"
+    /file:
+        /{id}:
+            get:
+                is: [secured, fetchAction: {type: File}]
+            patch:
+                is: [secured, updateAction: {inputType: FileInput, type: File}]
+
+    /note/{id}:
+        get:
+            is: [secured, fetchAction: {type: Note}]
+        patch:
+            is: [secured, updateAction: {inputType: NoteInput, type: Note}]
+    /song-field:
+        get:
+            is: [secured, listAction: {type: SongField}]
+            queryParameters:
+                song:
+                    description: Song id
+                    type: integer
+                    required: true
+                    example: 1
+                order-by:
+                    description: "sorting by fields (pattern: 'field|order' eg 'name|asc' )"
+                    type: string
+                    required: false
+                    example: "id"
+        /{id}:
+            get:
+                is: [secured, fetchAction: {type: SongField}]
+            patch:
+                is: [secured, updateAction: {inputType: SongFieldInput, type: SongField}]
+            delete:
+                is: [secured, deleteAction]
+    /users:
+        post:
+            is: [clientSecured, createAction: {inputType: UserInput, type: User}]
+            body:
+                application/x-www-form-urlencoded:
+                    description: create user
+                    properties:
+                        name:
+                            description: User name
+                            type: string
+                            required: true
+                        email:
+                            description: User email
+                            type: string
+                            required: true
+                        plainPassword:
+                            description: User password
+                            type: string
+                            required: true
+                        purchaseDate[receiptData]:
+                            description: User receiptData
+                            type: string
+                            required: false
+        get:
+            is: [secured, listAction: {type: User}]
+        /purchase:
+            patch:
+                is: [clientSecured, updateAction: {inputType: PurchaseDate, type: User}]
+        /me:
+            get:
+                is: [secured, fetchAction: {type: User}]
+                description: Fetches user for passed OAuth token
+        /{id}:
+            get:
+                is: [secured, fetchAction: {type: User}]
+            patch:
+                is: [secured, updateAction: {inputType: UserInput, type: User}]
+        /{confirmationToken}:
+            uriParameters:
+                confirmationToken:
+                    description: Confirmation token requested by users/{email}/update-token endpoint. Should starts with "t_" prefix.
+            patch:
+                is: [clientSecured, updateAction: {inputType: UserInput, type: User}]
+        /{email}/update-token:
+            post:
+                is: [clientSecured]
+                description: Creates and sends update token to user
+                body:
+                    application/json:
+                        type: object
+                        properties:
+                            transport:
+                                type: string
+                                description: Transport id, to send token to user, can be one of ("web:password-reset")
+                responses:
+                    404:
+                        description: If user with given email not found
+                        body:
+                            application/json:
+                                type: NotFoundBody
+                    204:
+                        description: On success
+    /attachments:
+        /{path}:
+            get:
+                is: [secured]
+                responses:
+                    200:
+                        description: Binary attachments response
+                        body:
+                            binary/octet-stream:
+
+    /_uploader/attachments/upload:
+        post:
+            is: [entityResponse: {code: 200, type: File}]
+            description: Upload file
+            body:
+                multipart/form-data:
+                    properties:
+                        externalId:
+                            type: string
+                        file:
+                            type: file
+                        name:
+                            type: string
+    /_uploader/attachments/progress:
+        post:
+            is: [entityResponse: {code: 200, type: FileProgress}]
+            description: Upload progress

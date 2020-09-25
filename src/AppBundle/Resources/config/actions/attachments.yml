@@ -1,0 +1,4 @@
+services:
+    action.attachments.fetch:
+        parent: core.action.abstract
+        class: AppBundle\Action\Song\AttachmentsAction

@@ -1,0 +1,38 @@
+services:
+    action.song_field.create:
+        parent: core.action.abstract
+        class: Requestum\ApiBundle\Action\CreateAction
+        arguments:
+            - AppBundle\Entity\SongField
+            - AppBundle\Form\SongField\SongFieldType
+
+    action.song_field.update:
+        parent: core.action.abstract
+        class: Requestum\ApiBundle\Action\UpdateAction
+        arguments:
+            - AppBundle\Entity\SongField
+            - AppBundle\Form\SongField\SongFieldType
+
+
+    action.song_field.fetch:
+        parent: core.action.abstract
+        class: Requestum\ApiBundle\Action\FetchAction
+        arguments:
+            - AppBundle\Entity\SongField
+
+    action.song_field.list:
+        parent: core.action.abstract
+        class: Requestum\ApiBundle\Action\ListAction
+        arguments:
+            - AppBundle\Entity\SongField
+        calls:
+            - ['setOptions', [{'filters': [
+                'order-by',
+                'song',
+              ]}]]
+
+    action.song_field.delete:
+        parent: core.action.abstract
+        class: Requestum\ApiBundle\Action\DeleteAction
+        arguments:
+            - AppBundle\Entity\SongField

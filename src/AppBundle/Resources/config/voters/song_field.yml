@@ -1,0 +1,6 @@
+services:
+    voter.song_field.owner:
+        class: AppBundle\Security\Authorization\OwnerVoter
+        arguments: [[fetch, update, delete], AppBundle\Entity\SongField, song.folder.user]
+        tags:
+            - { name: security.voter }

@@ -1,0 +1,26 @@
+user:
+    resource: "@AppBundle/Resources/config/routing/user.yml"
+
+song:
+    resource: "@AppBundle/Resources/config/routing/song.yml"
+
+note:
+    resource: "@AppBundle/Resources/config/routing/note.yml"
+
+song_field:
+    resource: "@AppBundle/Resources/config/routing/song_field.yml"
+
+folder:
+    resource: "@AppBundle/Resources/config/routing/folder.yml"
+
+attachments:
+    resource: "@AppBundle/Resources/config/routing/attachments.yml"
+
+file:
+    resource: "@AppBundle/Resources/config/routing/file.yml"
+
+# todo: handle uploader routes like in car-service
+oneup_uploader:
+    resource: .
+    type: uploader
+# ------------------------------------------------

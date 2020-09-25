@@ -1,0 +1,13 @@
+file.fetch:
+    path: /file/{id}
+    methods: GET
+    defaults: { _controller: action.file.fetch:executeAction }
+    requirements:
+        id: \d+
+
+file.update:
+    path: /file/{id}
+    methods: PATCH
+    defaults: { _controller: action.file.update:executeAction }
+    requirements:
+        id: \d+

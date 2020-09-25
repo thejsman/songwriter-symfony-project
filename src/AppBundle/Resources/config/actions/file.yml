@@ -1,0 +1,13 @@
+services:
+    action.file.fetch:
+        parent: core.action.abstract
+        class: Requestum\ApiBundle\Action\FetchAction
+        arguments:
+            - AppBundle\Entity\File
+
+    action.file.update:
+        parent: core.action.abstract
+        class: Requestum\ApiBundle\Action\UpdateAction
+        arguments:
+            - AppBundle\Entity\File
+            - AppBundle\Form\File\FileType

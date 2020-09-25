@@ -1,0 +1,60 @@
+services:
+    action.user.list:
+        parent: core.action.abstract
+        class: Requestum\ApiBundle\Action\ListAction
+        arguments:
+            - AppBundle\Entity\User
+
+    action.user.fetch:
+        parent: core.action.abstract
+        class: Requestum\ApiBundle\Action\FetchAction
+        arguments:
+            - AppBundle\Entity\User
+
+    action.user.fetch_current:
+        parent: core.action.abstract
+        class: AppBundle\Action\User\FetchCurrentAction
+        arguments:
+            - AppBundle\Entity\User
+
+    action.user.create:
+        parent: core.action.abstract
+        class: Requestum\ApiBundle\Action\CreateAction
+        arguments:
+            - AppBundle\Entity\User
+            - AppBundle\Form\User\UserType
+
+    action.user.update:
+        parent: core.action.abstract
+        class: Requestum\ApiBundle\Action\UpdateAction
+        arguments:
+            - AppBundle\Entity\User
+            - AppBundle\Form\User\UserType
+
+    action.user.delete:
+        parent: core.action.abstract
+        class: Requestum\ApiBundle\Action\DeleteAction
+        arguments:
+            - AppBundle\Entity\User
+
+    action.user.request_update_token:
+        parent: core.action.abstract
+        class: AppBundle\Action\User\RequestUpdateTokenAction
+
+    action.user.update_by_token:
+        parent: core.action.abstract
+        class: Requestum\ApiBundle\Action\UpdateAction
+        arguments:
+            - AppBundle\Entity\User
+            - AppBundle\Form\User\UserType
+        calls:
+            - [setOptions, [{fetch_field: 'confirmationToken', access_attribute: null}]]
+
+    action.user.update_purchase:
+        parent: core.action.abstract
+        class: AppBundle\Action\User\UpdateUserPurchase
+        arguments:
+            - AuthBundle\Entity\AccessToken
+            - AppBundle\Form\User\ReceiptType
+        calls:
+            - [setOptions, [{fetch_field: 'token', access_attribute: null, form_options: {'validation_groups': 'Receipt'}}]]

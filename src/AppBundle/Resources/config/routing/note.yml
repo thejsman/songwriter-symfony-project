@@ -1,0 +1,13 @@
+note.update:
+    path: /note/{id}
+    methods: PATCH
+    defaults: { _controller: action.note.update:executeAction }
+    requirements:
+        id: \d+
+
+note.fetch:
+    path: /note/{id}
+    methods: GET
+    defaults: { _controller: action.note.fetch:executeAction }
+    requirements:
+        id: \d+

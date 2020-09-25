@@ -1,0 +1,25 @@
+folder.create:
+    path: /folder
+    methods: POST
+    defaults: { _controller: action.folder.global:executeAction }
+
+
+folder.list:
+    path: /folder
+    methods: GET
+    defaults: { _controller: action.folder.list:executeAction }
+
+folder.list.removed:
+    path: /folder/removed
+    methods: GET
+    defaults: { _controller: action.folder.list.removed:executeAction }
+
+folder.remove:
+    path: /folder/{id}
+    methods: DELETE
+    defaults: { _controller: action.folder.delete:executeAction }
+
+folder.fetch:
+    path: /folder/{id}
+    methods: GET
+    defaults: { _controller: action.folder.fetch:executeAction }

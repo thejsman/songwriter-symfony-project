@@ -1,0 +1,81 @@
+{
+    "name": "requestum/symfony-api-edition",
+    "license": "MIT",
+    "type": "project",
+    "description": "Symfony edition for api development",
+    "authors": [
+        {
+            "name": "Sergey Stavichenko",
+            "email": "sergey.stavichenko@gmail.com"
+        },
+        {
+            "name": "Turchak Alex",
+            "email": "turchakalexx@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": { "": "src/" },
+        "classmap": [ "app/AppKernel.php", "app/AppCache.php" ]
+    },
+    "autoload-dev": {
+        "psr-4": { "Tests\\": "tests/" }
+    },
+    "require": {
+        "php": ">=7.1",
+        "aporat/store-receipt-validator": "dev-master",
+        "doctrine/doctrine-bundle": "^1.6",
+        "doctrine/doctrine-fixtures-bundle": "^2.4",
+        "doctrine/orm": "^2.5",
+        "friendsofsymfony/oauth-server-bundle": "^1.5",
+        "guzzlehttp/guzzle": "^6.0",
+        "incenteev/composer-parameter-handler": "^2.0",
+        "league/flysystem-aws-s3-v2": "^1.0",
+        "nelmio/cors-bundle": "^1.4",
+        "oneup/flysystem-bundle": "^3.0",
+        "oneup/uploader-bundle": "^1.8",
+        "phpdocumentor/reflection-docblock": "^3.0",
+        "requestum/api-bundle": "dev-master@dev",
+        "requestum/email-sender-bundle": "dev-master@dev",
+        "sensio/distribution-bundle": "^5.0.19",
+        "sensio/framework-extra-bundle": "^3.0.2",
+        "stof/doctrine-extensions-bundle": "^1.2",
+        "symfony/monolog-bundle": "^3.1.0",
+        "symfony/swiftmailer-bundle": "^2.3.10",
+        "symfony/symfony": "3.3.*",
+        "twig/twig": "^1.0 || ^2.0",
+        "white-october/pagerfanta-bundle": "^1.0"
+    },
+    "require-dev": {
+        "sensio/generator-bundle": "^3.0",
+        "symfony/phpunit-bridge": "^3.0"
+    },
+    "scripts": {
+        "symfony-scripts": [
+            "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::prepareDeploymentTarget"
+        ],
+        "post-install-cmd": [
+            "@symfony-scripts"
+        ],
+        "post-update-cmd": [
+            "@symfony-scripts"
+        ]
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "extra": {
+        "symfony-app-dir": "app",
+        "symfony-bin-dir": "bin",
+        "symfony-var-dir": "var",
+        "symfony-web-dir": "web",
+        "symfony-tests-dir": "tests",
+        "symfony-assets-install": "hard",
+        "incenteev-parameters": {
+            "file": "app/config/parameters.yml"
+        }
+    }
+}

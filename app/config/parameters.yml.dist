@@ -1,0 +1,35 @@
+# This file is a "template" of what your parameters.yml file should look like
+# Set parameters here that may be different on each deployment target of the app, e.g. development, staging, production.
+# http://symfony.com/doc/current/best_practices/configuration.html#infrastructure-related-configuration
+parameters:
+    database_host: localhost
+    database_port: 3306
+    database_name: api
+    database_user: root
+    database_password: root
+    # You should uncomment this if you want use pdo_sqlite
+    # database_path: '%kernel.project_dir%/data.db3'
+
+    mailer_transport: smtp
+    mailer_host: 127.0.0.1
+    mailer_port: ~
+    mailer_user: ~
+    mailer_password: ~
+    mailer_encryption: ~
+    mailer_spool:
+       type: file
+       path: %kernel.root_dir%/spool
+
+    default_email_from: ~
+
+    # A secret key that's used to generate certain security-related tokens
+    secret: ThisTokenIsNotSoSecretChangeIt
+
+    cors_allow_origin: http://localhost
+    app_shared_secret: 'ddbe0486c4c54e36ac03a93e6535a165'
+    reset_password_link: 'http://songwriter.local/reset_password?token={token}'
+
+    aws_s3_key: key
+    aws_s3_secret: secret
+    aws_s3_bucket: bucket
+    aws_s3_region: region

@@ -1,0 +1,67 @@
+imports:
+  - { resource: actions/* }
+  - { resource: voters/* }
+
+services:
+    user_listener:
+        class: AppBundle\EventListener\UserListener
+        arguments:
+            - '@security.user_password_encoder.generic'
+        tags:
+            - { name: doctrine.orm.entity_listener }
+
+    app.timestampable_entity.listener:
+        class: AppBundle\EventListener\Entity\CascadeTimestampableListener
+        tags:
+            - { name: doctrine.event_listener, event: onFlush, priority: -1 }
+
+    app.file_entity.listener:
+        class: AppBundle\EventListener\Entity\FileListener
+        arguments:
+            - "@oneup_flysystem.attachments_filesystem"
+        tags:
+            - { name: doctrine.event_listener, event: onFlush, priority: -2 }
+
+    app.upload_listener:
+        class: AppBundle\EventListener\UploadListener
+        arguments: ["@doctrine.orm.entity_manager"]
+        tags:
+            - { name: kernel.event_listener, event: oneup_uploader.post_persist, method: onUpload }
+
+    app.service.update_token_sender:
+        class: AppBundle\Service\UpdateTokenSender\UpdateTokenSender
+        public: true
+        arguments: ["@requestum_email_sender", "%default_email_from%", "%update_token_links%"]
+
+    app.service.check_user_receipt:
+        class: AppBundle\Service\Receipt\CheckReceiptExpires
+        public: true
+        arguments: ["%app_shared_secret%",'@doctrine', '@logger']
+
+    security.user_checker:
+        class: AppBundle\Security\UserChecker
+        arguments: ["@app.service.check_user_receipt"]
+
+    app.aws.s3_client:
+        class: Aws\S3\S3Client
+        factory: [Aws\S3\S3Client, factory]
+        arguments:
+            -
+                key: "%aws_s3_key%"
+                secret: "%aws_s3_secret%"
+                region: "%aws_s3_region%"
+                signature: "v4"
+
+    app.song.normalizer:
+        class: AppBundle\Serializer\Song\SongNormalizer
+        calls:
+            - ["setNormalizer", ["@serializer.normalizer.object"]]
+        tags:
+            - { name: serializer.normalizer }
+
+    app.song_field.normalizer:
+        class: AppBundle\Serializer\Song\SongFieldNormalizer
+        calls:
+            - ["setNormalizer", ["@serializer.normalizer.object"]]
+        tags:
+            - { name: serializer.normalizer }

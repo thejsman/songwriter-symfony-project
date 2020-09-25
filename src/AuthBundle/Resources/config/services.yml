@@ -1,0 +1,25 @@
+services:
+    auth.security.user_provider:
+        class: AuthBundle\Security\UserProvider
+        arguments:
+            - "@doctrine.orm.entity_manager"
+
+    auth.security.auth_response_handler:
+        class: AuthBundle\Security\AuthExceptionHandler
+        tags:
+            - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse }
+
+    auth.social_provider.facebook:
+        class: AuthBundle\OAuth\SocialProvider\FacebookProvider
+
+    auth.grant_extension.social:
+        class: AuthBundle\OAuth\SocialGrantExtension
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@validator"
+            - "@core.util.error_factory"
+            - {
+                  facebook: "@auth.social_provider.facebook",
+              }
+        tags:
+            - { name: fos_oauth_server.grant_extension, uri: "urn:external:grant-type" }

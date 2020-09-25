@@ -1,0 +1,9 @@
+services:
+  voter.file.owner:
+      class: AppBundle\Security\Authorization\FileOwnerVoter
+      arguments:
+          - [fetch, update]
+          - AppBundle\Entity\File
+          - 'songField.song.folder.user'
+      tags:
+        - { name: security.voter }

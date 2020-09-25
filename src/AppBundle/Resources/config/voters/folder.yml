@@ -1,0 +1,6 @@
+services:
+    voter.folder.owner:
+        class: AppBundle\Security\Authorization\OwnerVoter
+        arguments: [[fetch, update, delete], AppBundle\Entity\Folder, user]
+        tags:
+            - { name: security.voter }

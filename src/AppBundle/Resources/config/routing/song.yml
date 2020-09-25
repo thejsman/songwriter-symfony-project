@@ -1,0 +1,35 @@
+song.list:
+    path: /song
+    methods: GET
+    defaults: { _controller: action.song.list:executeAction }
+
+song.create:
+    path: /song
+    methods: POST
+    defaults: { _controller: action.song.global:executeAction }
+
+song.list.removed:
+    path: /song/removed
+    methods: GET
+    defaults: { _controller: action.song.list.removed:executeAction }
+
+song.fetch:
+    path: /song/{id}
+    methods: GET
+    defaults: { _controller: action.song.fetch:executeAction }
+    requirements:
+        id: \d+
+
+song.remove:
+    path: /song/{id}
+    methods: DELETE
+    defaults: { _controller: action.song.delete:executeAction }
+    requirements:
+        id: \d+
+
+song.update_firld_order:
+    path: /song/{id}/fields/order
+    methods: PATCH
+    defaults: { _controller: action.song.update_order:executeAction }
+    requirements:
+        id: \d+

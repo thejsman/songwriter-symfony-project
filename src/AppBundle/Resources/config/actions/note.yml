@@ -1,0 +1,13 @@
+services:
+    action.note.update:
+        parent: core.action.abstract
+        class: Requestum\ApiBundle\Action\UpdateAction
+        arguments:
+            - AppBundle\Entity\Note
+            - AppBundle\Form\Note\NoteType
+
+    action.note.fetch:
+        parent: core.action.abstract
+        class: Requestum\ApiBundle\Action\FetchAction
+        arguments:
+            - AppBundle\Entity\Note
